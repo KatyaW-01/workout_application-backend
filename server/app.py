@@ -24,7 +24,9 @@ def get_workouts():
 def get_workout(id):
   #show a single workout with its associated exercises
   #include reps/sets/duration from WorkoutExercises if you can
-  pass
+  workout = Workout.query.filter_by(id=id).first()
+  response_body = WorkoutSchema().dump(workout)
+  return make_response(response_body, 200)
 
 @app.route('/workouts', methods=["POST"])
 def create_workouts():
