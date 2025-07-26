@@ -2,9 +2,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import CheckConstraint
+from marshmallow import Schema, fields, validate
+
 db = SQLAlchemy()
 
-# Define Models here
 class Exercise(db.Model):
   __tablename__ = 'exercises'
 
@@ -24,7 +25,16 @@ class Exercise(db.Model):
     return name
 
   def __repr__(self):
-    return f'<Exercese {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
+    return f'<Exercise {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
+  
+class ExerciseSchema(Schema):
+  id = fields.Int(dump_only=True)
+  name = fields.String()
+  category = fields.String(validate=validate.Length(min=3))
+  equipment_needed = fields.Boolean()
+
+  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("exercise",)), many=True)
+
 
 class Workout(db.Model):
   __tablename__ = 'workouts'
@@ -42,7 +52,15 @@ class Workout(db.Model):
   )
 
   def __repr__(self):
-    return f'<Exercese {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
+    return f'<Workout {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
+  
+class WorkoutSchema(Schema):
+  id = fields.Int(dump_only=True)
+  date = fields.Date()
+  duration_minutes = fields.Int()
+  notes = fields.String(validate=validate.Length(max=500))
+
+  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout",)),many=True)
 
 class WorkoutExercise(db.Model):
   __tablename__ = 'workout_exercises'
@@ -68,5 +86,14 @@ class WorkoutExercise(db.Model):
 
   def __repr__(self):
     return f'<Exercese {self.id}, Date: {self.workout.date}, Exercise: {self.exercise.name}, Reps: {self.reps}, Sets: {self.sets}, Duration: {self.duration_seconds}>'
+  
+class WorkoutExerciseSchema(Schema):
+  id = fields.Int(dump_only=True)
+  reps = fields.Int()
+  sets = fields.Int()
+  duration_seconds = fields.Int()
+
+  workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises",)))
+  exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises",)))
 
 
