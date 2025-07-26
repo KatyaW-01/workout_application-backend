@@ -56,7 +56,12 @@ class Workout(db.Model):
     return f'<Exercese {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
   
 class WorkoutSchema(Schema):
-  pass
+  id = fields.Int(dump_only=True)
+  date = fields.Date()
+  duration_minutes = fields.Int()
+  notes = fields.String()
+
+  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workouts",)))
 
 class WorkoutExercise(db.Model):
   __tablename__ = 'workout_exercises'
