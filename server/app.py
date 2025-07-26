@@ -28,7 +28,6 @@ def get_workout(id):
 
 @app.route('/workouts', methods=["POST"])
 def create_workouts():
-  #create a workout
   workout_schema = WorkoutSchema()
   data = request.get_json()
   workout_data = workout_schema.load(data)
@@ -41,7 +40,6 @@ def create_workouts():
 
 @app.route('/workouts/<id>', methods=["DELETE"])
 def delete_workout(id):
-  #delete associated WorkoutExercises if you can 
   workout = Workout.query.filter_by(id=id).first()
   if workout:
     db.session.delete(workout)
@@ -80,7 +78,6 @@ def create_exercises():
 
 @app.route('/exercises/<id>', methods=["DELETE"])
 def delete_exercise(id):
-  #delete associated WorkoutExercises if you can
   exercise  = Exercise.query.filter_by(id=id).first()
   if exercise:
     db.session.delete(exercise)
@@ -94,7 +91,6 @@ def delete_exercise(id):
 
 @app.route('/workouts/<workout_id>/exercises/<exercise_id>/workout_exercises', methods=["POST"])
 def add_exercise_to_workout(workout_id,exercise_id):
-  #add an exercise to a workout, including reps/sets/duration
   workout = Workout.query.filter_by(id=workout_id).first()
   exercise  = Exercise.query.filter_by(id=exercise_id).first()
   if not workout or not exercise:
