@@ -12,7 +12,7 @@ class Exercise(db.Model):
   category = db.Column(db.String)
   equipment_needed = db.Column(db.Boolean)
 
-  workout_exercises = db.relationship('WorkoutExercises', back_populates='exercise')
+  workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
 
   def __repr__(self):
     return f'<Exercese {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
@@ -25,10 +25,14 @@ class Workout(db.Model):
   duration_minutes = db.Column(db.Integer)
   notes = db.Column(db.Text)
 
-  workout_exercises = db.relationship('WorkoutExercises', back_populates='workout')
+  workout_exercises = db.relationship('WorkoutExercise', back_populates='workout')
+  exercises = association_proxy('workout_exercises', 'exercise')
 
-class WorkoutExercises(db.Model):
-  __tablename__ = 'workout exercises'
+  def __repr__(self):
+    return f'<Exercese {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
+
+class WorkoutExercise(db.Model):
+  __tablename__ = 'workout_exercises'
 
   id = db.Column(db.Integer, primary_key=True)
   reps = db.Column(db.Integer)
@@ -40,5 +44,8 @@ class WorkoutExercises(db.Model):
 
   workout = db.relationship('Workout', back_populates='workout_exercises')
   exercise = db.relationship('Exercise', back_populates='workout_exercises')
+
+  def __repr__(self):
+    return f'<Exercese {self.id}, Date: {self.workout.date}, Exercise: {self.exercise.name}, Reps: {self.reps}, Sets: {self.sets}, Duration: {self.duration_seconds}>'
 
 
