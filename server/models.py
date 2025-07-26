@@ -13,3 +13,12 @@ class Exercise(db.Model):
 
   def __repr__(self):
     return f'<Exercese {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
+
+class Workout(db.Model):
+  __tablename__ = 'workouts'
+
+  id = db.Column(db.Integer, primary_key=True)
+  date = db.Column(db.Date)
+  duration_minutes = db.Column(db.Integer)
+  notes = db.Column(db.Text)
+
