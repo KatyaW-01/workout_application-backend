@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask, make_response, request
 from flask_migrate import Migrate
 
 from models import *
@@ -29,7 +29,15 @@ def get_workout(id):
 @app.route('/workouts', methods=["POST"])
 def create_workouts():
   #create a workout
-  pass
+  workout_schema = WorkoutSchema()
+  data = request.get_json()
+  workout_data = workout_schema.load(data)
+  workout = Workout(date=workout_data["date"], duration_minutes=workout_data["duration_minutes"], notes=workout_data["notes"])
+  db.session.add(workout)
+  db.session.commit()
+
+  result = workout_schema.dump(workout)
+  return make_response(result,201)
 
 @app.route('/workouts/<id>', methods=["DELETE"])
 def delete_workout(id):
