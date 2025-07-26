@@ -26,3 +26,13 @@ with app.app_context():
   w4 = Workout(date=date(2025, 7, 25), duration_minutes=35, notes="Light cardio and stretching.")
   db.session.add_all([w1,w2,w3,w4])
   db.session.commit()
+
+  #add workout exercise
+  we1 = WorkoutExercise(reps=12, sets=3, duration_seconds=60)
+  we2 = WorkoutExercise(reps=10, sets=4, duration_seconds=45)
+  we3 = WorkoutExercise(reps=15, sets=2, duration_seconds=90)
+  we4 = WorkoutExercise(reps=20, sets=3, duration_seconds=120)
+  we5 = WorkoutExercise(reps=18, sets=4, duration_seconds=75)
+  db.session.add_all([we1,we2,we3,we4,we5])
+  db.session.commit()
+
