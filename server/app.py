@@ -43,7 +43,17 @@ def create_workouts():
 def delete_workout(id):
   #delte a workout
   #delete associated WorkoutExercises if you can 
-  pass
+  workout = Workout.query.filter_by(id=id).first()
+  if workout:
+    db.session.delete(workout)
+    db.session.commit()
+    body = {'message': f'Workout {id} deleted successfully.'}
+    status = 200
+  else:
+    body = {'message': f'Workout {id} not found.'}
+    status = 404
+  
+  return make_response(body,status)
 
 @app.route('/exercises', methods=["GET"])
 def get_exercises():
