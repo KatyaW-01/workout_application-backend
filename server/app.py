@@ -22,8 +22,6 @@ def get_workouts():
 
 @app.route('/workouts/<id>', methods=["GET"])
 def get_workout(id):
-  #show a single workout with its associated exercises
-  #include reps/sets/duration from WorkoutExercises if you can
   workout = Workout.query.filter_by(id=id).first()
   response_body = WorkoutSchema().dump(workout)
   return make_response(response_body, 200)
@@ -47,8 +45,9 @@ def get_exercises():
 
 @app.route('/exercises/<id>', methods=["GET"])
 def get_exercise(id):
-  #show an exercise and associated workouts
-  pass
+  exercise  = Exercise.query.filter_by(id=id).first()
+  response_body = ExerciseSchema().dump(exercise)
+  return make_response(response_body, 200)
 
 @app.route('/exercises', methods=["POST"])
 def create_exercises():
@@ -61,7 +60,7 @@ def delete_exercise(id):
   #delete associated WorkoutExercises if you can
   pass
 
-@app.route('/workouts/<workout_id>/exercises/<exercise_id>/workout_exercises')
+@app.route('/workouts/<workout_id>/exercises/<exercise_id>/workout_exercises', methods=["POST"])
 def add_exercise_to_workout(workout_id,exercise_id):
   #add an exercise to a workout, including reps/sets/duration
   pass
