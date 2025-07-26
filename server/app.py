@@ -80,9 +80,17 @@ def create_exercises():
 
 @app.route('/exercises/<id>', methods=["DELETE"])
 def delete_exercise(id):
-  #delete an exercse
   #delete associated WorkoutExercises if you can
-  pass
+  exercise  = Exercise.query.filter_by(id=id).first()
+  if exercise:
+    db.session.delete(exercise)
+    db.session.commit()
+    body = {'message': f'Exercise {id} deleted successfully.'}
+    status = 200
+  else:
+    body = {'message': f'Exercise {id} not found.'}
+    status = 404
+  return make_response(body,status)
 
 @app.route('/workouts/<workout_id>/exercises/<exercise_id>/workout_exercises', methods=["POST"])
 def add_exercise_to_workout(workout_id,exercise_id):
