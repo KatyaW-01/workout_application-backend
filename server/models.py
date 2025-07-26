@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import CheckConstraint
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 
 db = SQLAlchemy()
 
@@ -31,7 +31,7 @@ class Exercise(db.Model):
 class ExerciseSchema(Schema):
   id = fields.Int(dump_only=True)
   name = fields.String()
-  category = fields.String()
+  category = fields.String(validate=validate.Length(min=3))
   equipment_needed = fields.Boolean()
 
   workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("exercise",)), many=True)
@@ -59,7 +59,7 @@ class WorkoutSchema(Schema):
   id = fields.Int(dump_only=True)
   date = fields.Date()
   duration_minutes = fields.Int()
-  notes = fields.String()
+  notes = fields.String(validate=validate.Range(min=0, max=500))
 
   workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout",)),many=True)
 
