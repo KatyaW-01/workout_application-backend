@@ -10,12 +10,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 migrate = Migrate(app, db)
 db.init_app(app)
 
-#Define Routes here
+@app.route('/')
+def index():
+  return '<h1>Welcome to the Workout App</h1>'
 
 @app.route('/workouts', methods=["GET"])
 def get_workouts():
-  #list all workouts
-  pass
+  workouts = Workout.query.all()
+  result = WorkoutSchema(many=True).dump(workouts)
+  return make_response(result, 200)
 
 @app.route('/workouts/<id>', methods=["GET"])
 def get_workout(id):

@@ -6,7 +6,6 @@ from marshmallow import Schema, fields, validate
 
 db = SQLAlchemy()
 
-# Define Models here
 class Exercise(db.Model):
   __tablename__ = 'exercises'
 
@@ -26,7 +25,7 @@ class Exercise(db.Model):
     return name
 
   def __repr__(self):
-    return f'<Exercese {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
+    return f'<Exercise {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
   
 class ExerciseSchema(Schema):
   id = fields.Int(dump_only=True)
@@ -53,13 +52,13 @@ class Workout(db.Model):
   )
 
   def __repr__(self):
-    return f'<Exercese {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
+    return f'<Workout {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
   
 class WorkoutSchema(Schema):
   id = fields.Int(dump_only=True)
   date = fields.Date()
   duration_minutes = fields.Int()
-  notes = fields.String(validate=validate.Range(min=0, max=500))
+  notes = fields.String(validate=validate.Length(max=500))
 
   workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout",)),many=True)
 
@@ -94,7 +93,7 @@ class WorkoutExerciseSchema(Schema):
   sets = fields.Int()
   duration_seconds = fields.Int()
 
-  workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises",)), many=True)
-  exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises",)), many=True)
+  workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises",)))
+  exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises",)))
 
 
