@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy import CheckConstraint
 db = SQLAlchemy()
 
 # Define Models here
@@ -28,6 +29,10 @@ class Workout(db.Model):
   workout_exercises = db.relationship('WorkoutExercise', back_populates='workout')
   exercises = association_proxy('workout_exercises', 'exercise')
 
+  __table_args__ = (
+    CheckConstraint("date <= CURRENT_DATE", name="check_date_not_future")
+  )
+
   def __repr__(self):
     return f'<Exercese {self.id}, {self.date}, {self.duration_minutes}, {self.notes}>'
 
@@ -35,7 +40,7 @@ class WorkoutExercise(db.Model):
   __tablename__ = 'workout_exercises'
 
   id = db.Column(db.Integer, primary_key=True)
-  reps = db.Column(db.Integer)
+  reps = db.Column(db.Integer, db.CheckConstraint('reps < 50'))
   sets = db.Column(db.Integer)
   duration_seconds = db.Column(db.Integer)
 
