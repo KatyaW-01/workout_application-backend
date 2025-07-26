@@ -15,6 +15,14 @@ class Exercise(db.Model):
 
   workout_exercises = db.relationship('WorkoutExercise', back_populates='exercise')
 
+  @validates('name')
+  def validate_name(self, key, name):
+    if not name:
+      raise ValueError("Name cannot be Empty")
+    if not isinstance(name,str):
+      raise TypeError("Name must be a string")
+    return name
+
   def __repr__(self):
     return f'<Exercese {self.id}, {self.name}, {self.category}, {self.equipment_needed}>'
 
