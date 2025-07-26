@@ -38,7 +38,7 @@ class Workout(db.Model):
   exercises = association_proxy('workout_exercises', 'exercise')
 
   __table_args__ = (
-    CheckConstraint("date <= CURRENT_DATE", name="check_date_not_future")
+    CheckConstraint("date <= CURRENT_DATE", name="check_date_not_future"),
   )
 
   def __repr__(self):
