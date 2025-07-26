@@ -34,7 +34,6 @@ def create_workouts():
   workout = Workout(date=workout_data["date"], duration_minutes=workout_data["duration_minutes"], notes=workout_data["notes"])
   db.session.add(workout)
   db.session.commit()
-
   result = workout_schema.dump(workout)
   return make_response(result,201)
 
@@ -49,7 +48,6 @@ def delete_workout(id):
   else:
     body = {'message': f'Workout {id} not found.'}
     status = 404
-  
   return make_response(body,status)
 
 @app.route('/exercises', methods=["GET"])
@@ -72,7 +70,6 @@ def create_exercises():
   exercise = Exercise(name = exercise_data["name"], category = exercise_data["category"])
   db.session.add(exercise)
   db.session.commit()
-
   result = exercise_schema.dump(exercise)
   return make_response(result,201)
 
@@ -103,10 +100,8 @@ def add_exercise_to_workout(workout_id,exercise_id):
   workout_exercise = WorkoutExercise(workout = workout, exercise = exercise, reps = workout_exercise_data["reps"], sets = workout_exercise_data["sets"], duration_seconds = workout_exercise_data["duration_seconds"])
   db.session.add(workout_exercise)
   db.session.commit()
-
   result = workout_exercise_schema.dump(workout_exercise)
   return make_response(result, 201)
-
 
 if __name__ == '__main__':
   app.run(port=5555, debug=True)
