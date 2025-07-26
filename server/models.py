@@ -64,6 +64,7 @@ class WorkoutExercise(db.Model):
       raise ValueError("Duration seconds cannot be blank")
     if not isinstance(seconds,int):
       raise TypeError("Duration seconds must be an integer")
+    return seconds
 
   def __repr__(self):
     return f'<Exercese {self.id}, Date: {self.workout.date}, Exercise: {self.exercise.name}, Reps: {self.reps}, Sets: {self.sets}, Duration: {self.duration_seconds}>'
