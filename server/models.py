@@ -34,7 +34,7 @@ class ExerciseSchema(Schema):
   category = fields.String()
   equipment_needed = fields.Boolean()
 
-  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("exercises",)))
+  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("exercise",)), many=True)
 
 
 class Workout(db.Model):
@@ -61,7 +61,7 @@ class WorkoutSchema(Schema):
   duration_minutes = fields.Int()
   notes = fields.String()
 
-  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workouts",)))
+  workout_exercises = fields.Nested(lambda: WorkoutExerciseSchema(exclude=("workout",)),many=True)
 
 class WorkoutExercise(db.Model):
   __tablename__ = 'workout_exercises'
@@ -89,6 +89,12 @@ class WorkoutExercise(db.Model):
     return f'<Exercese {self.id}, Date: {self.workout.date}, Exercise: {self.exercise.name}, Reps: {self.reps}, Sets: {self.sets}, Duration: {self.duration_seconds}>'
   
 class WorkoutExerciseSchema(Schema):
-  pass
+  id = fields.Int(dump_only=True)
+  reps = fields.Int()
+  sets = fields.Int()
+  duration_seconds = fields.Int()
+
+  workout = fields.Nested(lambda: WorkoutSchema(exclude=("workout_exercises",)), many=True)
+  exercise = fields.Nested(lambda: ExerciseSchema(exclude=("workout_exercises",)), many=True)
 
 
