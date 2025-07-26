@@ -41,7 +41,6 @@ def create_workouts():
 
 @app.route('/workouts/<id>', methods=["DELETE"])
 def delete_workout(id):
-  #delte a workout
   #delete associated WorkoutExercises if you can 
   workout = Workout.query.filter_by(id=id).first()
   if workout:
@@ -69,8 +68,15 @@ def get_exercise(id):
 
 @app.route('/exercises', methods=["POST"])
 def create_exercises():
-  #create an exercise
-  pass
+  exercise_schema = ExerciseSchema()
+  data = request.get_json()
+  exercise_data = exercise_schema.load(data)
+  exercise = Exercise(name = exercise_data["name"], category = exercise_data["category"])
+  db.session.add(exercise)
+  db.session.commit()
+
+  result = exercise_schema.dump(exercise)
+  return make_response(result,201)
 
 @app.route('/exercises/<id>', methods=["DELETE"])
 def delete_exercise(id):
